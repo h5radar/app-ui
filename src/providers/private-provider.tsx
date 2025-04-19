@@ -1,4 +1,4 @@
-import SignInPage from "@/pages/sign-in";
+import SignInPage from "@/pages/bye";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { type FC, useEffect, useState } from "react";

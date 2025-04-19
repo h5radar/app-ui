@@ -13,6 +13,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "react-oidc-context";
 
 /*
  * TODO:
@@ -27,6 +28,7 @@ export function UserNav() {
   // const { data: session } = useSession();
   const { data: session } = { data: { user: { image: null, name: "a5gurnakov", email: null } } };
   const navigate = useNavigate();
+  const auth = useAuth();
 
   if (session) {
     return (
@@ -66,7 +68,7 @@ export function UserNav() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => null}>
+          <DropdownMenuItem onClick={() => auth.signoutRedirect()}>
             Log out
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
           </DropdownMenuItem>
