@@ -44,9 +44,9 @@ export const TechnologiesPage = () => {
     });
   }
 
-  const handleFilterParams = useCallback((columnId: string, value: string) => {
+  const handleFilterParams = useCallback((value: string) => {
     return setQueryParams((prev) => {
-      return { ...prev, [columnId]: value, page: 1 };
+      return { ...prev, title: value, page: 1 };
     });
   }, []);
   const handleSortingParams = useCallback((id: string, desc: "asc" | "desc") => {

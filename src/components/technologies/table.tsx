@@ -29,7 +29,6 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ColumnDef,
-  ColumnFiltersState,
   Row,
   SortingState,
   VisibilityState,
@@ -60,14 +59,14 @@ import {
 import { Label } from "@/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/ui/tabs";
+import { Tabs, TabsContent } from "@/ui/tabs";
 
 import { API_URL } from "@/constants/application";
 import { DELETE_TECHNOLOGY, GET_TECHNOLOGIES } from "@/constants/query-keys";
 
 import { technologySchema } from "@/schemas/technology";
 
-import { ServerTextFilter } from "@/components/server-filter";
+import { ServerFilter } from "@/components/server-filter";
 
 // Create a separate component for the drag handle
 function DragHandle({ id }: { id: number }) {
@@ -125,7 +124,7 @@ export const TechnologyTable = ({
   data: z.infer<typeof technologySchema>[];
   handlePagination?: (page: number, size: number) => void;
   handleSorting?: (id: string, desc: "asc" | "desc") => void;
-  handleFilter?: (columnId: string, value: string) => void;
+  handleFilter?: (value: string) => void;
   pageSize: number;
   isLoading: boolean;
   rowCount: number;
@@ -136,7 +135,6 @@ export const TechnologyTable = ({
   const [localData, setLocalData] = React.useState(data);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState({
     pageIndex: pageIndex,
@@ -197,7 +195,6 @@ export const TechnologyTable = ({
           </Badge>
         </div>
       ),
-      enableColumnFilter: false,
     },
     {
       accessorKey: "active",
@@ -212,7 +209,6 @@ export const TechnologyTable = ({
           {row.original.active}
         </Badge>
       ),
-      enableColumnFilter: false,
     },
     {
       id: "actions",
@@ -277,7 +273,6 @@ export const TechnologyTable = ({
       sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
       pagination,
     },
     rowCount: rowCount,
@@ -295,7 +290,6 @@ export const TechnologyTable = ({
       }
       return setSorting(newSorting);
     },
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updaterOrValue) => {
       const newPagination = typeof updaterOrValue === "function" ? updaterOrValue(pagination) : updaterOrValue;
@@ -331,30 +325,7 @@ export const TechnologyTable = ({
   return (
     <Tabs defaultValue="outline" className="w-full flex-col justify-start gap-6">
       <div className="flex items-center justify-between px-4 lg:px-6">
-        <Label htmlFor="view-selector" className="sr-only">
-          View
-        </Label>
-        <Select defaultValue="outline">
-          <SelectTrigger className="flex w-fit @4xl/main:hidden" size="sm" id="view-selector">
-            <SelectValue placeholder="Select a view" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="outline">Outline</SelectItem>
-            <SelectItem value="past-performance">Past Performance</SelectItem>
-            <SelectItem value="key-personnel">Key Personnel</SelectItem>
-            <SelectItem value="focus-documents">Focus Documents</SelectItem>
-          </SelectContent>
-        </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Outline</TabsTrigger>
-          <TabsTrigger value="past-performance">
-            Past Performance <Badge variant="secondary">3</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="key-personnel">
-            Key Personnel <Badge variant="secondary">2</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
-        </TabsList>
+        <div>{handleFilter ? <ServerFilter handleFilter={handleFilter} /> : null}</div>
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -434,11 +405,6 @@ export const TechnologyTable = ({
                                   }[header.column.getIsSorted() as string] ?? null}
                                 </div>
                               </div>
-                              {header.column.getCanFilter() ? (
-                                <div>
-                                  <ServerTextFilter column={header.column} onFilterChange={handleFilter} />
-                                </div>
-                              ) : null}
                               {header.id === "actions" ? (
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>

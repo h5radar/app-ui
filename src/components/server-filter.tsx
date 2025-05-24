@@ -1,65 +1,38 @@
-import { Column } from "@tanstack/react-table";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { Input } from "@/ui/input";
 
 import { DEBOUNCE_TIME } from "@/constants/application";
 
-interface TextFilterProps<TData, TValue> {
-  column: Column<TData, TValue>;
-  debounceTime?: number;
-  onFilterChange?: (columnId: string, value: string) => Promise<void> | void;
+interface ISerachInput {
+  handleFilter: (value: string) => void;
 }
+export const ServerFilter = ({ handleFilter }: ISerachInput) => {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-export function ServerTextFilter<TData, TValue>({
-  column,
-  debounceTime = DEBOUNCE_TIME,
-  onFilterChange,
-}: TextFilterProps<TData, TValue>) {
-  const [inputValue, setInputValue] = useState(() => (column.getFilterValue() as string) ?? "");
-
-  const initialValueRef = useRef(inputValue);
-  const isMounted = useRef(false);
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      isMounted.current = true;
-      return;
-    }
-    if (onFilterChange) {
-      onFilterChange(column.id, inputValue);
-    }
-    const currentFilterValue = column.getFilterValue() as string;
-    if (currentFilterValue !== inputValue) {
-      setInputValue(currentFilterValue ?? "");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFilterValue(), onFilterChange]);
+  const debouncedHandleFilter = useCallback(
+    (value: string) => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => handleFilter(value), DEBOUNCE_TIME);
+    },
+    [handleFilter],
+  );
 
   useEffect(() => {
-    if (inputValue === initialValueRef.current) return;
-
-    const timer = setTimeout(() => {
-      column.setFilterValue(inputValue);
-      initialValueRef.current = inputValue;
-    }, debounceTime);
-
-    return () => clearTimeout(timer);
-  }, [inputValue, debounceTime, column]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  };
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
-    <div className="relative ml-4">
-      <Input type="text" value={inputValue} onChange={handleChange} className="w-full border px-2 py-1 rounded" />
-      <button
-        onClick={() => setInputValue("")}
-        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-      >
-        ×
-      </button>
-    </div>
+    <Input
+      placeholder="Filter title or website..."
+      onChange={(event) => debouncedHandleFilter(event.target.value)}
+      className="max-w-72 w-72"
+    />
   );
-}
+};
