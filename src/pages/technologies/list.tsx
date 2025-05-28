@@ -2,9 +2,12 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { API_URL } from "@/constants/application";
 import { GET_TECHNOLOGIES } from "@/constants/query-keys";
+
+import { technologySchema } from "@/schemas/technology";
 
 import { createQueryParams } from "@/lib/params";
 
@@ -33,7 +36,11 @@ export const TechnologiesPage = () => {
           Authorization: `Bearer ${auth.user?.access_token}`,
         },
       });
-      return await response.json();
+      // return await response.json();
+      const data = await response.json();
+      const technologiesSchema = z.array(technologySchema);
+      technologiesSchema.parse(data.content);
+      return data;
     },
     placeholderData: keepPreviousData,
   });
