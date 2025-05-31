@@ -1,23 +1,69 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { IconDotsVertical } from "@tabler/icons-react";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
+import { Link } from "react-router";
 import { toast } from "sonner";
+import { z } from "zod";
+
+import { Button } from "@/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/ui/dropdown-menu";
 
 import { API_URL } from "@/constants/application";
-import { GET_TECHNOLOGIES } from "@/constants/query-keys";
+import { DELETE_TECHNOLOGY, GET_TECHNOLOGIES } from "@/constants/query-keys";
+
+import { technologySchema } from "@/schemas/technology";
 
 import { createQueryParams } from "@/lib/params";
 
-import { TechnologyTable } from "@/components/technologies/table";
+import { technologyColumns } from "@/components/columns/technology-columns";
+import { DataTable } from "@/components/data-table";
 
 export const TechnologiesPage = () => {
   const auth = useAuth();
+  const queryClient = useQueryClient();
   const [queryParams, setQueryParams] = useState({
     page: 1,
     size: 10,
     sort: ["title", "asc"],
   });
 
+  const columns: ColumnDef<z.infer<typeof technologySchema>>[] = [
+    ...technologyColumns,
+    {
+      id: "actions",
+      cell: ({ row }) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              className="data-[state=open]:bg-muted text-muted-foreground flex size-8"
+              size="icon"
+            >
+              <IconDotsVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            <Link to={`/technologies/edit/${row.id}`}>
+              <DropdownMenuItem className="cursor-pointer">Edit</DropdownMenuItem>
+            </Link>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={() => deleteTechnology(row.id)}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
   const {
     data: technologiesData = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
     isLoading: isFetchingTechnologiesData,
@@ -38,6 +84,27 @@ export const TechnologiesPage = () => {
     placeholderData: keepPreviousData,
   });
 
+  const { mutate: deleteTechnology } = useMutation({
+    mutationFn: async (rowId: string) => {
+      await fetch(`${API_URL}/technologies/${rowId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${auth.user?.access_token}`,
+        },
+      });
+    },
+    mutationKey: [DELETE_TECHNOLOGY],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: [GET_TECHNOLOGIES] });
+      toast.success("Technology has been deleted successfully");
+    },
+    onError(error) {
+      toast.error("Error deleting technology", {
+        description: error.message,
+      });
+    },
+  });
   if (isErrorDataList) {
     toast.error("Error getting technologies", {
       description: errorDataList.message,
@@ -62,18 +129,18 @@ export const TechnologiesPage = () => {
 
   return (
     <>
-      <TechnologyTable
+      <DataTable
         data={technologiesData.content}
+        columns={columns}
         handlePagination={handlePaginationParams}
-        rowCount={technologiesData.totalElements}
-        isLoading={isFetchingTechnologiesData}
         handleSorting={handleSortingParams}
         handleFilter={handleFilterParams}
+        handleDelete={deleteTechnology}
+        rowCount={technologiesData.totalElements}
+        isLoading={isFetchingTechnologiesData}
         pageSize={technologiesData.pageable.pageSize}
         pageIndex={technologiesData.pageable.pageNumber}
       />
     </>
   );
 };
-
-export default TechnologiesPage;

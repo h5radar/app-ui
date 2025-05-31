@@ -60,6 +60,9 @@ jobs:
       - name: Run vitest commands
         shell: bash
         run: npm run test
+      - name: Run cypress commands
+        shell: bash
+        run: npm run cypress:run
   coverage:
     needs: test
     runs-on: ubuntu-latest

@@ -9,7 +9,7 @@ export default defineConfig({
     json: true,
   },
   e2e: {
-    excludeSpecPattern: ["**/1-getting-started/**", "**/2-advanced-examples/**"],
+    excludeSpecPattern: ["**/2-advanced-examples/**"],
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },

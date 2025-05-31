@@ -42,13 +42,21 @@ build-application:
       - VERSION
 
 # Run all tests
-test-application:
+test-vitest:
   stage: test
   tags:
     - linux
   script:
     - npm install
     - npm run test
+
+test-cypress:
+  stage: test
+  tags:
+    - linux
+  script:
+    - npm install
+    - npm run cypress:run
 
 # Run coverage
 coverage-application:
