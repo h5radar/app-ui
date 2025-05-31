@@ -16,7 +16,7 @@ export default function NewTechnologyPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { mutate: addTechnology, isPending: isAddTechnology } = useMutation<
+  const { mutate: createTechnology, isPending: isPending } = useMutation<
     z.infer<typeof technologySchema>,
     Error,
     z.infer<typeof technologySchema>
@@ -46,12 +46,12 @@ export default function NewTechnologyPage() {
   });
 
   const onSubmit = (values: z.infer<typeof technologySchema>) => {
-    addTechnology(values);
+    createTechnology(values);
   };
 
   return (
     <>
-      <TechnologyForm onSubmit={onSubmit} disabled={isAddTechnology} />
+      <TechnologyForm onSubmit={onSubmit} disabled={isPending} />
     </>
   );
 }

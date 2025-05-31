@@ -18,9 +18,9 @@ export default function EditTechnologyPage() {
 
   const {
     data: prevDataTechnologies,
-    isFetching: isFetchingTechnologiesData,
-    isError: isErrorDataList,
-    error: errorDataList,
+    isFetching: isFetching,
+    isError: isError,
+    error: error,
   } = useQuery({
     queryKey: ["get technology", id],
     queryFn: async () => {
@@ -35,7 +35,7 @@ export default function EditTechnologyPage() {
     },
   });
 
-  const { mutate: updateTechnology, isPending: isUpdateTechnology } = useMutation<
+  const { mutate: updateTechnology, isPending: isPending } = useMutation<
     z.infer<typeof technologySchema>,
     Error,
     z.infer<typeof technologySchema>
@@ -64,9 +64,9 @@ export default function EditTechnologyPage() {
     },
   });
 
-  if (isErrorDataList) {
+  if (isError) {
     toast("Load error", {
-      description: JSON.stringify(errorDataList.message),
+      description: JSON.stringify(error.message),
     });
   }
 
@@ -74,11 +74,13 @@ export default function EditTechnologyPage() {
     updateTechnology(values);
   }
 
-  if (isFetchingTechnologiesData) return <h1>Loading...</h1>;
+  if (isFetching) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <>
-      <TechnologyForm defaultDataForm={prevDataTechnologies} onSubmit={onSubmit} disabled={isUpdateTechnology} />
+      <TechnologyForm defaultDataForm={prevDataTechnologies} onSubmit={onSubmit} disabled={isPending} />
     </>
   );
 }

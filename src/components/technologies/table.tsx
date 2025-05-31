@@ -114,23 +114,23 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof technologySchema>> }) {
 }
 
 export const TechnologyTable = ({
+  isLoading = false,
   data,
+  rowCount,
+  pageSize,
+  pageIndex,
   handlePagination,
   handleSorting,
   handleFilter,
-  isLoading = false,
-  pageSize,
-  rowCount,
-  pageIndex,
 }: {
+  isLoading: boolean;
   data: z.infer<typeof technologySchema>[];
+  rowCount: number;
+  pageSize: number;
+  pageIndex: number;
   handlePagination?: (page: number, size: number) => void;
   handleSorting?: (id: string, desc: "asc" | "desc") => void;
   handleFilter?: (value: string) => void;
-  pageSize: number;
-  isLoading: boolean;
-  rowCount: number;
-  pageIndex: number;
 }) => {
   const auth = useAuth();
   const isMobile = useIsMobile();

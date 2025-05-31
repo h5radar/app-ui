@@ -18,6 +18,7 @@
     "^@/components/(.*)$",
     "^@/providers/(.*)$",
     "^@/hooks/(.*)$",
+    "^@/queries/(.*)$",
     "^@/layouts/(.*)$",
     "^@/pages/(.*)$",
     "^@/(.*)"

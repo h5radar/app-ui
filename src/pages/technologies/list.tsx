@@ -1,14 +1,10 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
 import { toast } from "sonner";
 
-import { API_URL } from "@/constants/application";
-import { GET_TECHNOLOGIES } from "@/constants/query-keys";
-
-import { createQueryParams } from "@/lib/params";
-
 import { TechnologyTable } from "@/components/technologies/table";
+
+import { useGetTechnologies } from "@/queries/technology";
 
 export const TechnologiesPage = () => {
   const auth = useAuth();
@@ -17,30 +13,16 @@ export const TechnologiesPage = () => {
     size: 10,
     sort: ["title", "asc"],
   });
-
   const {
     data: technologiesData = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
-    isLoading: isFetchingTechnologiesData,
-    isError: isErrorDataList,
-    error: errorDataList,
-  } = useQuery({
-    queryKey: [GET_TECHNOLOGIES, queryParams],
-    queryFn: async () => {
-      const response = await fetch(`${API_URL}/technologies?${createQueryParams({ ...queryParams })}`, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${auth.user?.access_token}`,
-        },
-      });
-      return await response.json();
-    },
-    placeholderData: keepPreviousData,
-  });
+    isLoading: isLoading,
+    isError: isError,
+    error: error,
+  } = useGetTechnologies(auth, queryParams);
 
-  if (isErrorDataList) {
+  if (isError) {
     toast.error("Error getting technologies", {
-      description: errorDataList.message,
+      description: error.message,
     });
   }
 
@@ -63,14 +45,14 @@ export const TechnologiesPage = () => {
   return (
     <>
       <TechnologyTable
+        isLoading={isLoading}
         data={technologiesData.content}
-        handlePagination={handlePaginationParams}
         rowCount={technologiesData.totalElements}
-        isLoading={isFetchingTechnologiesData}
-        handleSorting={handleSortingParams}
-        handleFilter={handleFilterParams}
         pageSize={technologiesData.pageable.pageSize}
         pageIndex={technologiesData.pageable.pageNumber}
+        handlePagination={handlePaginationParams}
+        handleSorting={handleSortingParams}
+        handleFilter={handleFilterParams}
       />
     </>
   );
