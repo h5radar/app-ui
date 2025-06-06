@@ -6,8 +6,10 @@ import { SidebarInset, SidebarProvider } from "@/ui/sidebar";
 import { Toaster } from "@/ui/sonner.tsx";
 
 import AppNavbar from "@/components/app-navbar";
-import KBar from "@/components/kbar";
+// import KBar from "@/components/kbar";
 import RadarSidebar from "@/components/radar-sidebar";
+
+import { SearchProvider } from "@/providers/search-provider";
 
 export default function RadarLayout() {
   // Persisting the sidebar state in the cookie.
@@ -16,10 +18,11 @@ export default function RadarLayout() {
   return (
     <>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} storageKey="dashboard-theme">
-        <KBar>
+        <SearchProvider>
           <SidebarProvider defaultOpen={defaultOpen}>
             <RadarSidebar />
             <SidebarInset>
+              {/* TODO сюда допистаь компонеент */}
               <AppNavbar />
               <div className="flex">
                 <div className="p-5 w-full md:max-w-[1440px]">
@@ -28,7 +31,7 @@ export default function RadarLayout() {
               </div>
             </SidebarInset>
           </SidebarProvider>
-        </KBar>
+        </SearchProvider>
         <Toaster />
       </ThemeProvider>
     </>

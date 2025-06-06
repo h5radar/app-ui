@@ -1,6 +1,7 @@
+import { Search } from "./search";
+
 import { SidebarTrigger } from "@/ui/sidebar";
 
-import SearchInput from "@/components/search-input";
 import { TenantSwitcher } from "@/components/tenant-switcher";
 import ThemeToggler from "@/components/theme-toggler";
 import { UserDropdown } from "@/components/user-dropdown.tsx";
@@ -13,7 +14,7 @@ const AppNavbar = () => {
       </div>
       <div className="flex items-center gap-2 px-4">
         <div className="hidden md:flex">
-          <SearchInput />
+          <Search />
         </div>
         <TenantSwitcher />
         <UserDropdown />
