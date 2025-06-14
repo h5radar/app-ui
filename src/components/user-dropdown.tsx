@@ -45,12 +45,12 @@ export function UserDropdown() {
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => navigate("/account")}>
               Account
-              <DropdownMenuShortcut>⇧⌘A</DropdownMenuShortcut>
+              <DropdownMenuShortcut>⇧⌘O</DropdownMenuShortcut>
             </DropdownMenuItem>
             {NOTIFICATIONS_ENABLED === "true" && (
               <DropdownMenuItem onClick={() => navigate("/notifications")}>
                 Notifications
-                <DropdownMenuShortcut>⇧⌘O</DropdownMenuShortcut>
+                <DropdownMenuShortcut>⇧⌘F</DropdownMenuShortcut>
               </DropdownMenuItem>
             )}
             {BILLING_ENABLED === "true" && (
