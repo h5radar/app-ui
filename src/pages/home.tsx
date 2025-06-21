@@ -4,20 +4,31 @@ import { useAuth } from "react-oidc-context";
 
 import { userSchema } from "@/schemas/user";
 
-import { useCreateAccountUser } from "@/queries/account-user";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-redux";
+
 import { useSeedLicenses } from "@/queries/license";
 import { useSeedPractices } from "@/queries/practice";
-import { useCreateRadarUser } from "@/queries/radar-user";
 import { useSeedTechnologies } from "@/queries/technology";
+
+import { fetchAccountUser } from "@/slices/account-user";
+import { fetchRadarUser } from "@/slices/radar-user";
 
 export default function HomePage() {
   const auth = useAuth();
   const queryClient = useQueryClient();
-  const { mutate: createAccountUser, isPending: isPending1 } = useCreateAccountUser(auth, queryClient);
-  const { mutate: createRadarUser, isPending: isPending2 } = useCreateRadarUser(auth, queryClient);
-  const { mutate: seedLicenses, isPending: isPending3 } = useSeedLicenses(auth, queryClient);
-  const { mutate: seedPractices, isPending: isPending4 } = useSeedPractices(auth, queryClient);
-  const { mutate: seedTechnologies, isPending: isPending5 } = useSeedTechnologies(auth, queryClient);
+  const dispatch = useAppDispatch();
+
+  // const accountUser = useAppSelector((state) => state.accountUser.user);
+  const loadingAccount = useAppSelector((state) => state.accountUser.loading);
+  const errorAccount = useAppSelector((state) => state.accountUser.error);
+
+  const radarUser = useAppSelector((state) => state.radarUser.user);
+  const loadingRadar = useAppSelector((state) => state.radarUser.loading);
+  const errorRadar = useAppSelector((state) => state.radarUser.error);
+
+  const { mutate: seedLicenses, isPending: isPending1 } = useSeedLicenses(auth, queryClient, radarUser);
+  const { mutate: seedPractices, isPending: isPending2 } = useSeedPractices(auth, queryClient, radarUser);
+  const { mutate: seedTechnologies, isPending: isPending3 } = useSeedTechnologies(auth, queryClient, radarUser);
 
   useEffect(() => {
     const user = userSchema.parse({
@@ -25,22 +36,36 @@ export default function HomePage() {
       sub: auth.user?.profile.sub,
       username: auth.user?.profile.preferred_username,
     });
+    dispatch(fetchRadarUser({ user, auth }));
+    dispatch(fetchAccountUser({ user, auth }));
+  }, [dispatch, auth]);
 
-    createAccountUser(user);
-    createRadarUser(user);
-
+  useEffect(() => {
     seedLicenses();
     seedPractices();
     seedTechnologies();
-  }, [auth, createAccountUser, createRadarUser, seedLicenses, seedPractices, seedTechnologies]);
+  }, [auth, seedLicenses, seedPractices, seedTechnologies]);
 
-  if (isPending1 || isPending2 || isPending3 || isPending4 || isPending5) {
+  if (loadingAccount || loadingRadar || isPending1 || isPending2 || isPending3) {
     return <h1>Loading...</h1>;
+  }
+
+  if (errorAccount || errorRadar) {
+    return (
+      <div>
+        <h1>Error getting technologies</h1>
+        <p>{errorAccount}</p>
+        <p>{errorRadar}</p>
+      </div>
+    );
   }
 
   return (
     <>
       <h1 className="text-3xl font-bold underline">Home</h1>
+      <div>
+        <h2>TODO</h2>
+      </div>
     </>
   );
 }

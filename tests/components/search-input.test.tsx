@@ -7,9 +7,9 @@ import { billingSearchItem } from "@/constants/search";
 import { notificationSearchItem } from "@/constants/search";
 import { radarSearchItem } from "@/constants/search";
 
-import { SearchInput } from "@/components/search-input";
-
 import { SearchProvider } from "@/providers/search";
+
+import { SearchInput } from "@/components/search-input";
 
 describe("SearchInput", () => {
   it("get search input for empty nav items", () => {

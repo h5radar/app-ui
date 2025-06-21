@@ -7,10 +7,10 @@ import { Toaster } from "@/ui/sonner.tsx";
 
 import { radarSearchItem } from "@/constants/search";
 
+import { SearchProvider } from "@/providers/search";
+
 import AppNavbar from "@/components/app-navbar";
 import RadarSidebar from "@/components/radar-sidebar";
-
-import { SearchProvider } from "@/providers/search";
 
 export default function RadarLayout() {
   // Persisting the sidebar state in the cookie.

@@ -19,6 +19,7 @@ import { QueryParams } from "@/types/query-params";
 
 import { responseSchema } from "@/schemas/response";
 import { technologySchema } from "@/schemas/technology";
+import { userSchema } from "@/schemas/user";
 
 import { createQueryParams } from "@/lib/query-params";
 
@@ -144,17 +145,23 @@ export const useGetTechnologies = (auth: AuthContextProps, queryParams: QueryPar
   });
 };
 
-export const useSeedTechnologies = (auth: AuthContextProps, queryClient: QueryClient) => {
+export const useSeedTechnologies = (
+  auth: AuthContextProps,
+  queryClient: QueryClient,
+  radarUser: z.infer<typeof userSchema> | null,
+) => {
   return useMutation({
     mutationFn: async () => {
-      const response = await fetch(`${RADAR_API_URL}/technologies/seed`, {
+      if (!radarUser?.id) {
+        throw new Error("Radar user id is missing");
+      }
+      await fetch(`${RADAR_API_URL}/technologies/seed/${radarUser.id}`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${auth.user?.access_token}`,
         },
       });
-      return await response.json();
     },
     mutationKey: [SEED_TECHNOLOGIES],
     onSuccess() {

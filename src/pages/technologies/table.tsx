@@ -2,9 +2,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
 
-import { DataTable } from "@/components/data-table";
-
 import { useDeleteTechnology, useGetTechnologies } from "@/queries/technology";
+
+import { DataTable } from "@/components/data-table";
 
 import { useTechnologyColumns } from "@/pages/technologies/columns";
 
