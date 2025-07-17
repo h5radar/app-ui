@@ -1,3 +1,5 @@
+import NewMaturitiesPage from "./pages/maturities/new";
+import { MaturitiesPage } from "./pages/maturities/table";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { StrictMode } from "react";
@@ -188,6 +190,9 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/practices" element={<PracticesPage />} />
                 <Route path="/practices/new" element={<NewPracticesPage />} />
                 <Route path="/practices/edit/:id" element={<EditPracticePage />} />
+                <Route path="/maturities" element={<MaturitiesPage />} />
+                <Route path="/maturities/new" element={<NewMaturitiesPage />} />
+                <Route path="/maturities/edit/:id" element={<EditPracticePage />} />
               </Route>
             </Routes>
           </HotkeysProvider>
