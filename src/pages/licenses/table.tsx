@@ -2,13 +2,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
 
-import { useDeleteProduct, useGetProducts } from "@/queries/product";
+import { useDeleteLicense, useGetLicenses } from "@/queries/license";
 
 import { DataTable } from "@/components/data-table";
 
-import { useProductColumns } from "@/pages/products/columns";
+import { useLicenseColumns } from "@/pages/licenses/columns";
 
-export function ProductsPage() {
+export const LicensesPage = () => {
   const auth = useAuth();
   const queryClient = useQueryClient();
   const [queryParams, setQueryParams] = useState({
@@ -18,14 +18,15 @@ export function ProductsPage() {
   });
 
   const {
-    data: products = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
+    data: licenses = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
     isLoading: isLoading,
     isError: isError,
     error: error,
-  } = useGetProducts(auth, queryParams);
+  } = useGetLicenses(auth, queryParams);
 
-  const { mutate: deleteTechnology } = useDeleteProduct(auth, queryClient);
-  const columns = useProductColumns(deleteTechnology);
+  const { mutate: deleteLicense } = useDeleteLicense(auth, queryClient);
+
+  const columns = useLicenseColumns(deleteLicense);
 
   const handlePagination = useCallback((page: number, size: number) => {
     setQueryParams((prev) => {
@@ -48,27 +49,28 @@ export function ProductsPage() {
   if (isError) {
     return (
       <div>
-        <h1>Error getting products</h1>
+        <h1>Error getting licenses</h1>
         <p>{error.message}</p>
       </div>
     );
   }
+
   return (
     <>
       <DataTable
         isLoading={isLoading}
-        pageLink={"products"}
-        filterPlaceholder="Filter, for example: My product%..."
         columns={columns}
-        data={products.content}
-        rowCount={products.totalElements}
-        pageSize={products.pageable.pageSize}
-        pageIndex={products.pageable.pageNumber}
+        pageLink={"licenses"}
+        filterPlaceholder="Filter, for example: MIT%..."
+        data={licenses.content}
+        rowCount={licenses.totalElements}
+        pageSize={licenses.pageable.pageSize}
+        pageIndex={licenses.pageable.pageNumber}
         handlePagination={handlePagination}
         handleSorting={handleSorting}
         handleFiltering={handleFiltering}
-        handleDelete={deleteTechnology}
+        handleDelete={deleteLicense}
       />
     </>
   );
-}
+};

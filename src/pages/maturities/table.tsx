@@ -1,14 +1,13 @@
+import { useMaturityColumns } from "./columns";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { useAuth } from "react-oidc-context";
 
-import { useDeleteLicense, useGetLicenses } from "@/queries/license";
+import { useDeleteMaturity, useGetMaturities } from "@/queries/maturity";
 
 import { DataTable } from "@/components/data-table";
 
-import { useLicenseColumns } from "@/pages/license/columns";
-
-export const LicensesPage = () => {
+export const MaturitiesPage = () => {
   const auth = useAuth();
   const queryClient = useQueryClient();
   const [queryParams, setQueryParams] = useState({
@@ -18,15 +17,15 @@ export const LicensesPage = () => {
   });
 
   const {
-    data: licenses = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
+    data: maturities = { content: [], pageable: { pageNumber: 0, pageSize: 10 }, totalElements: 0 },
     isLoading: isLoading,
     isError: isError,
     error: error,
-  } = useGetLicenses(auth, queryParams);
+  } = useGetMaturities(auth, queryParams);
 
-  const { mutate: deleteLicense } = useDeleteLicense(auth, queryClient);
+  const { mutate: deleteMaturity } = useDeleteMaturity(auth, queryClient);
 
-  const columns = useLicenseColumns(deleteLicense);
+  const columns = useMaturityColumns(deleteMaturity);
 
   const handlePagination = useCallback((page: number, size: number) => {
     setQueryParams((prev) => {
@@ -49,7 +48,7 @@ export const LicensesPage = () => {
   if (isError) {
     return (
       <div>
-        <h1>Error getting licenses</h1>
+        <h1>Error getting maturities</h1>
         <p>{error.message}</p>
       </div>
     );
@@ -60,16 +59,16 @@ export const LicensesPage = () => {
       <DataTable
         isLoading={isLoading}
         columns={columns}
-        pageLink={"licenses"}
-        filterPlaceholder="Filter, for example: MIT%..."
-        data={licenses.content}
-        rowCount={licenses.totalElements}
-        pageSize={licenses.pageable.pageSize}
-        pageIndex={licenses.pageable.pageNumber}
+        filterPlaceholder="Filter, for example: Unit tests%..."
+        pageLink={"maturities"}
+        data={maturities.content}
+        rowCount={maturities.totalElements}
+        pageSize={maturities.pageable.pageSize}
+        pageIndex={maturities.pageable.pageNumber}
         handlePagination={handlePagination}
         handleSorting={handleSorting}
         handleFiltering={handleFiltering}
-        handleDelete={deleteLicense}
+        handleDelete={deleteMaturity}
       />
     </>
   );

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 
 import { useCreateLicense } from "@/queries/license";
 
-import LicenseForm from "@/pages/license/form";
+import LicenseForm from "@/pages/licenses/form";
 
 export default function NewLicensesPage() {
   const auth = useAuth();

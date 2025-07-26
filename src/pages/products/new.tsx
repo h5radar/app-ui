@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router";
 
-import { useCreateProduct } from "@/queries/products";
+import { useCreateProduct } from "@/queries/product";
 
 import ProductForm from "@/pages/products/form";
 

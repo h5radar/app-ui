@@ -3,7 +3,7 @@ import { useAuth } from "react-oidc-context";
 
 import { useGetCompliance, useUpdateCompliance } from "@/queries/compliance";
 
-import ComplianceForm from "@/pages/complience/form";
+import ComplianceForm from "@/pages/compliences/form";
 
 export default function EditCompliancesPage() {
   const auth = useAuth();

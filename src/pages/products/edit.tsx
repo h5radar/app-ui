@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "react-oidc-context";
 
-import { useGetProduct, useUpdateProduct } from "@/queries/products";
+import { useGetProduct, useUpdateProduct } from "@/queries/product";
 
 import ProductForm from "@/pages/products/form";
 

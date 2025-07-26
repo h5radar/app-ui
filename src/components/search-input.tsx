@@ -4,7 +4,7 @@ import { Button } from "@/ui/button";
 
 import { cn } from "@/lib/utils";
 
-import { useSearch } from "@/hooks/useSearch";
+import { useSearch } from "@/hooks/use-search";
 
 interface SearchInputProps {
   className?: string;

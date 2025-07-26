@@ -28,14 +28,17 @@ import BiSystemsPage from "@/pages/bi-systems";
 import BillingPage from "@/pages/billing";
 import ChannelsPage from "@/pages/channels";
 import CobwebsPage from "@/pages/cobwebs";
-import EditCompliancesPage from "@/pages/complience/edit";
-import NewCompliancesPage from "@/pages/complience/new";
-import { CompliancesPage } from "@/pages/complience/table";
+import EditCompliancesPage from "@/pages/compliences/edit";
+import NewCompliancesPage from "@/pages/compliences/new";
+import { CompliancesPage } from "@/pages/compliences/table";
 import HomePage from "@/pages/home";
 import InvoicesPage from "@/pages/invoices";
-import EditLicensesPage from "@/pages/license/edit";
-import NewLicensesPage from "@/pages/license/new";
-import { LicensesPage } from "@/pages/license/table";
+import EditLicensesPage from "@/pages/licenses/edit";
+import NewLicensesPage from "@/pages/licenses/new";
+import { LicensesPage } from "@/pages/licenses/table";
+import EditMaturityPage from "@/pages/maturities/edit";
+import NewMaturitiesPage from "@/pages/maturities/new";
+import { MaturitiesPage } from "@/pages/maturities/table";
 import NotificationsPage from "@/pages/notifications";
 import ParticipantsPage from "@/pages/participants";
 import PiesPage from "@/pages/pies";
@@ -61,7 +64,6 @@ import ShowRadarPage from "@/pages/radars/show";
 import RadarsPage from "@/pages/radars/table";
 import RaysPage from "@/pages/rays";
 import RepositoriesPage from "@/pages/repositories/table";
-import RingsPage from "@/pages/rings/table";
 import SegmentsPage from "@/pages/segments/table";
 import TeamsPage from "@/pages/teams/table";
 import EditTechnologyPage from "@/pages/technologies/edit";
@@ -175,7 +177,6 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/radars/show/:id" element={<ShowRadarPage />} />
                 <Route path="/rays" element={<RaysPage />} />
                 <Route path="/repositories" element={<RepositoriesPage />} />
-                <Route path="/rings" element={<RingsPage />} />
                 <Route path="/segments" element={<SegmentsPage />} />
                 <Route path="/teams" element={<TeamsPage />} />
                 <Route path="/technologies" element={<TechnologiesPage />} />
@@ -191,6 +192,9 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="/practices" element={<PracticesPage />} />
                 <Route path="/practices/new" element={<NewPracticesPage />} />
                 <Route path="/practices/edit/:id" element={<EditPracticePage />} />
+                <Route path="/maturities" element={<MaturitiesPage />} />
+                <Route path="/maturities/new" element={<NewMaturitiesPage />} />
+                <Route path="/maturities/edit/:id" element={<EditMaturityPage />} />
                 <Route path="/compliances" element={<CompliancesPage />} />
                 <Route path="/compliances/new" element={<NewCompliancesPage />} />
                 <Route path="/compliances/edit/:id" element={<EditCompliancesPage />} />

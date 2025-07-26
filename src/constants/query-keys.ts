@@ -42,6 +42,16 @@ export const DELETE_PRODUCT = "Delete product";
 export const GET_PRODUCT = "Get product";
 export const GET_PRODUCTS = "Get products";
 export const SEED_PRODUCTS = "Seed products";
+
+/*
+ * TanStack query keys for maturity
+ */
+export const CREATE_MATURITY = "Create maturity";
+export const UPDATE_MATURITY = "Update maturity";
+export const DELETE_MATURITY = "Delete maturity";
+export const GET_MATURITY = "Get maturity";
+export const GET_MATURITIES = "Get maturities";
+export const SEED_MATURITIES = "Seed maturities";
 /*
  * TanStack query keys for compliances
  */

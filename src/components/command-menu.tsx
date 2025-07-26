@@ -18,7 +18,7 @@ import { globalNavItems } from "@/constants/search";
 
 import { NavItem } from "@/types/nav-item";
 
-import { useSearch } from "@/hooks/useSearch";
+import { useSearch } from "@/hooks/use-search";
 
 interface CommandMenuProps {
   navItemList: NavItem[];

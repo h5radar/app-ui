@@ -3,7 +3,7 @@ import { useAuth } from "react-oidc-context";
 
 import { useGetLicense, useUpdateLicense } from "@/queries/license";
 
-import LicenseForm from "@/pages/license/form";
+import LicenseForm from "@/pages/licenses/form";
 
 export default function EditLicensesPage() {
   const auth = useAuth();
