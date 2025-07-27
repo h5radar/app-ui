@@ -15,7 +15,6 @@ import AppNavbar from "@/components/app-navbar";
 export default function AccountLayout() {
   // Persisting the sidebar state in the cookie.
   const defaultOpen = Cookies.get("sidebar_state") !== "false";
-
   return (
     <>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true} storageKey="dashboard-theme">
